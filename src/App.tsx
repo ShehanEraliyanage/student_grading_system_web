@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FC } from "react";
+import { css, Global } from "@emotion/react";
+import { globalAlertStyles } from "./common/globalAlertStyles";
+import theme from "./theme";
+import NavigationRoutes from "./NavigationRoutes";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: FC = () => (
+  <div className="App">
+    <Global
+      styles={css`
+        ${globalAlertStyles}
+        * {
+          font-family: "Inter", sans-serif;
+        }
+        ::-webkit-scrollbar {
+          width: 5px !important;
+          background-color: ${theme.gray100} !important;
+        }
+        ::-webkit-scrollbar-thumb {
+          background-color: ${theme.gray400} !important;
+        }
+      `}
+    />
+    <NavigationRoutes />
+  </div>
+);
 
 export default App;
