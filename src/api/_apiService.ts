@@ -28,6 +28,7 @@ http.interceptors.response.use(
 
 http.interceptors.request.use((config: any) => {
   const token = getStoredAuthToken();
+  console.log("🚀 ~ http.interceptors.request.use ~ token:", token);
 
   if (token && isTokenExpired(token)) {
     localStorage.clear();
@@ -40,8 +41,6 @@ http.interceptors.request.use((config: any) => {
     config.headers.authorization = getBearToken(token);
   }
 
-  (config as any).withCredentials = true;
-  (config as any).headers.authorization = getBearToken(token);
   return config;
 });
 
