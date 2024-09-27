@@ -1,7 +1,11 @@
-import React from "react";
-import { Form, Input, Button, Checkbox, Typography } from "antd";
+import React, { useEffect } from "react";
+import { Form, Input, Button, Checkbox, Typography, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { useLoginUser } from "../../api/authHooks";
+import { UserLoginI } from "../../types/auth.types";
+import { useAuth } from "../../providers/auth-context";
 
 const { Title } = Typography;
 
@@ -62,8 +66,30 @@ const StyledLink = styled.a`
 `;
 
 const Login: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  const { setToken } = useAuth();
+  const { mutate: login, isLoading, isError } = useLoginUser();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    }
+  }, [isLoggedIn, navigate]);
+
+  const onFinish = (values: unknown) => {
+    const userValues = values as UserLoginI;
+    login(userValues, {
+      onSuccess: (data) => {
+        // Assuming 'data.token' contains the token
+        setToken(data.access_token);
+        message.success("Login successful!");
+        navigate("/dashboard");
+      },
+      onError: (error: any) => {
+        message.error(error?.response?.data?.message || "Login failed.");
+      },
+    });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -81,12 +107,12 @@ const Login: React.FC = () => {
           onFinishFailed={onFinishFailed}
         >
           <Form.Item
-            name="username"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            name="email"
+            rules={[{ required: true, message: "Please input your Email!" }]}
           >
             <StyledInput
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="Email"
             />
           </Form.Item>
 
@@ -103,16 +129,26 @@ const Login: React.FC = () => {
 
           <Form.Item>
             <StyledCheckbox name="remember">Remember me</StyledCheckbox>
-            <StyledForgot href="">Forgot password?</StyledForgot>
+            <StyledForgot href="/forgot-password">
+              Forgot password?
+            </StyledForgot>
           </Form.Item>
 
           <Form.Item>
-            <StyledButton type="primary" htmlType="submit" block>
+            <StyledButton
+              type="primary"
+              htmlType="submit"
+              block
+              loading={isLoading} // Disable button while loading
+            >
               Log in
             </StyledButton>
-            Or <StyledLink href="">register now!</StyledLink>
+            Or <StyledLink href="/register">register now!</StyledLink>
           </Form.Item>
         </StyledForm>
+        {isError && (
+          <Typography.Text type="danger">Login failed.</Typography.Text>
+        )}
       </StyledCard>
     </Container>
   );
