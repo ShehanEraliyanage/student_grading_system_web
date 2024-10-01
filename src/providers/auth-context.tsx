@@ -39,7 +39,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   );
   const { data: userData, refetch, error, isLoading: isLoading } = useGetMe();
   const [token, setToken] = useState(getStoredAuthToken());
-  console.log("🚀 ~ token:", token);
+
   const [permission, setPermission] = useState<any>(getAuthPayloads());
 
   const queryClient = useQueryClient();
@@ -51,7 +51,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     if (token) {
       storeAuthToken(token);
-      setAuthPayloads(permission);
+      setAuthPayloads(token);
       fetchUser();
     }
   }, [token, refetch]);

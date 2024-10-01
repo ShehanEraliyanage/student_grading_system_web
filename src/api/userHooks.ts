@@ -7,7 +7,7 @@ export const useGetMe = () =>
   useQuery<UserMeResponseI, ApiError>(
     "me",
     async () => {
-      const response = await http.get("/user/me");
+      const response = await http.get("/users/me");
       return response.data;
     },
     {

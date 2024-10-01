@@ -28,7 +28,6 @@ http.interceptors.response.use(
 
 http.interceptors.request.use((config: any) => {
   const token = getStoredAuthToken();
-  console.log("🚀 ~ http.interceptors.request.use ~ token:", token);
 
   if (token && isTokenExpired(token)) {
     localStorage.clear();

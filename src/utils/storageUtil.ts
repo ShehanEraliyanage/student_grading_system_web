@@ -17,6 +17,6 @@ export const getAuthPayloads = (): AuthPayload | null => {
   }
 };
 
-export const setAuthPayloads = (payLoads: AuthPayload[]): void => {
-  localStorage.setItem(AuthPayloads, JSON.stringify(payLoads));
+export const setAuthPayloads = (payLoads: string): void => {
+  localStorage.setItem(AuthPayloads, payLoads);
 };
